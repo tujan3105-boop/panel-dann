@@ -1,0 +1,278 @@
+@extends('layouts.root')
+
+@section('title')
+    Root Panel
+@endsection
+
+@section('content-header')
+    <h1><i class="fa fa-star" style="color:#ffd700;"></i> Root Panel <small>Full system control &mdash; root access only.</small></h1>
+@endsection
+
+@section('content')
+<style>
+    .root-dashboard .info-box {
+        border: 1px solid #253a4e;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
+        border-radius: 12px;
+        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+        background: linear-gradient(150deg, #172637 0%, #0f1b2b 100%) !important;
+        overflow: hidden;
+    }
+    .root-dashboard .info-box:hover {
+        transform: translateY(-2px);
+        border-color: #3a5878;
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.36);
+    }
+    .root-dashboard .info-box-icon {
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .root-dashboard .info-box-text {
+        color: #9fb6ca !important;
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+    }
+    .root-dashboard .info-box-number {
+        color: #f4f8fc !important;
+    }
+    .root-dashboard .box {
+        border-top: 0 !important;
+        border: 1px solid #253a4e;
+        border-radius: 12px;
+        overflow: hidden;
+        background: linear-gradient(180deg, #0f1a2a 0%, #101a28 100%);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+    }
+    .root-dashboard .box-header {
+        background: rgba(17, 30, 46, 0.92);
+        border-bottom: 1px solid #253a4e;
+    }
+    .root-dashboard .box-title {
+        color: #d8e5f2;
+        font-weight: 700;
+    }
+    .root-dashboard .btn.btn-lg {
+        border-radius: 10px !important;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding-top: 13px;
+        padding-bottom: 13px;
+    }
+    .root-dashboard .root-privileges {
+        color: #c7d8e8;
+        line-height: 1.9;
+        font-size: 15px;
+    }
+    .root-dashboard .info-box {
+        animation: rootDashboardIn 260ms ease both;
+    }
+    .root-dashboard .master-note {
+        border: 1px solid #325272;
+        border-radius: 10px;
+        padding: 14px;
+        background: rgba(20, 36, 55, 0.6);
+    }
+    @keyframes rootDashboardIn {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+<div class="root-dashboard">
+<div class="row">
+    {{-- System Stats --}}
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-lg-2 col-sm-4 col-xs-6">
+                <div class="info-box">
+                    <span class="info-box-icon" style="background:#06b0d1;"><i class="fa fa-users"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Users</span>
+                        <span class="info-box-number">{{ $stats['users'] }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-xs-6">
+                <div class="info-box">
+                    <span class="info-box-icon" style="background:#00a65a;"><i class="fa fa-server"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Servers</span>
+                        <span class="info-box-number">{{ $stats['servers'] }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-xs-6">
+                <div class="info-box">
+                    <span class="info-box-icon" style="background:#f39c12;"><i class="fa fa-sitemap"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Nodes</span>
+                        <span class="info-box-number">{{ $stats['nodes'] }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-xs-6">
+                <div class="info-box">
+                    <span class="info-box-icon" style="background:#dd4b39;"><i class="fa fa-key"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">API Keys</span>
+                        <span class="info-box-number">{{ $stats['api_keys'] }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-xs-6">
+                <div class="info-box">
+                    <span class="info-box-icon" style="background:#6c5ce7;"><i class="fa fa-globe"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Public Servers</span>
+                        <span class="info-box-number">{{ $stats['public_servers'] }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-xs-6">
+                <div class="info-box">
+                    <span class="info-box-icon" style="background:#e17055;"><i class="fa fa-ban"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Suspended</span>
+                        <span class="info-box-number">{{ $stats['suspended'] }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-xs-6">
+                <div class="info-box">
+                    <span class="info-box-icon" style="background:#c0392b;"><i class="fa fa-fire"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Critical Risk IPs</span>
+                        <span class="info-box-number">{{ $stats['critical_risks'] }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-xs-6">
+                <div class="info-box">
+                    <span class="info-box-icon" style="background:#16a085;"><i class="fa fa-heartbeat"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Avg Server Health</span>
+                        <span class="info-box-number">{{ $stats['avg_server_health'] }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-xs-6">
+                <div class="info-box">
+                    <span class="info-box-icon" style="background:#2980b9;"><i class="fa fa-sitemap"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Avg Node Health</span>
+                        <span class="info-box-number">{{ $stats['avg_node_health'] }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-bolt text-yellow"></i> Root Quick Actions</h3>
+            </div>
+            <div class="box-body">
+                <a href="{{ route('root.users') }}" class="btn btn-primary btn-block btn-lg" style="margin-bottom:8px;">
+                    <i class="fa fa-users"></i> Manage All Users
+                </a>
+                <a href="{{ route('root.servers') }}" class="btn btn-success btn-block btn-lg" style="margin-bottom:8px;">
+                    <i class="fa fa-server"></i> Manage All Servers
+                </a>
+                <a href="{{ route('root.nodes') }}" class="btn btn-warning btn-block btn-lg" style="margin-bottom:8px;">
+                    <i class="fa fa-sitemap"></i> Manage All Nodes
+                </a>
+                <a href="{{ route('root.api_keys') }}" class="btn btn-danger btn-block btn-lg" style="margin-bottom:8px;">
+                    <i class="fa fa-key"></i> Manage All API Keys
+                </a>
+                <a href="{{ route('root.security') }}" class="btn btn-info btn-block btn-lg" style="margin-bottom:8px;">
+                    <i class="fa fa-shield"></i> Security Control Center
+                </a>
+                <a href="{{ route('root.threat_intelligence') }}" class="btn btn-danger btn-block btn-lg" style="margin-bottom:8px;">
+                    <i class="fa fa-line-chart"></i> Threat Intelligence Dashboard
+                </a>
+                <a href="{{ route('root.audit_timeline') }}" class="btn btn-warning btn-block btn-lg" style="margin-bottom:8px;">
+                    <i class="fa fa-history"></i> Global Audit Timeline
+                </a>
+                <a href="{{ route('root.health_center') }}" class="btn btn-success btn-block btn-lg" style="margin-bottom:8px;">
+                    <i class="fa fa-heartbeat"></i> Health Center
+                </a>
+                <a href="{{ route('admin.index') }}" class="btn btn-default btn-block btn-lg">
+                    <i class="fa fa-shield"></i> Go to Admin Panel
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="box box-danger">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-star" style="color:#ffd700;"></i> Root Privileges</h3>
+            </div>
+            <div class="box-body">
+                <ul class="root-privileges">
+                    <li><i class="fa fa-check text-green"></i> Bypasses <strong>all scope checks</strong></li>
+                    <li><i class="fa fa-check text-green"></i> Access to <strong>every admin endpoint</strong></li>
+                    <li><i class="fa fa-check text-green"></i> Can generate <strong>root API keys</strong> for full-system automation</li>
+                    <li><i class="fa fa-check text-green"></i> Can <strong>suspend / unsuspend</strong> any user</li>
+                    <li><i class="fa fa-check text-green"></i> Can <strong>delete any server</strong></li>
+                    <li><i class="fa fa-check text-green"></i> Can <strong>revoke any API key</strong></li>
+                    <li><i class="fa fa-check text-green"></i> Can view <strong>all public &amp; private servers</strong></li>
+                </ul>
+                <hr>
+                <p>
+                    <span class="label {{ $stats['maintenance_mode'] ? 'label-warning' : 'label-default' }}">Maintenance: {{ $stats['maintenance_mode'] ? 'ON' : 'OFF' }}</span>
+                    <span class="label {{ $stats['panic_mode'] ? 'label-danger' : 'label-default' }}">Panic: {{ $stats['panic_mode'] ? 'ON' : 'OFF' }}</span>
+                    <span class="label {{ $stats['silent_defense_mode'] ? 'label-info' : 'label-default' }}">Silent Defense: {{ $stats['silent_defense_mode'] ? 'ON' : 'OFF' }}</span>
+                    <span class="label {{ $stats['kill_switch_mode'] ? 'label-danger' : 'label-default' }}">Kill Switch: {{ $stats['kill_switch_mode'] ? 'ON' : 'OFF' }}</span>
+                    <span class="label {{ $stats['progressive_security_mode'] === 'lockdown' ? 'label-danger' : ($stats['progressive_security_mode'] === 'elevated' ? 'label-warning' : 'label-success') }}">Mode: {{ strtoupper($stats['progressive_security_mode']) }}</span>
+                </p>
+                <hr>
+                <p class="master-note text-center">
+                    <i class="fa fa-shield"></i> <strong>Protected by GantengDann</strong> &middot;
+                    Powered by GantengDann + GDWings
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-warning" style="background: #101b29;">
+            <div class="box-header with-border">
+                <h3 class="box-title" style="color: #ffd700;"><i class="fa fa-graduation-cap"></i> Root Master Control Tutorial</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h4 style="color: #ffd700;">1. Total Bypassing</h4>
+                        <p style="color: #9aaa8a;">As a Root user, you ignore <strong>all Administrative Scopes</strong>. You do not need roles to edit servers or nodes; your account is the ultimate authority over the entire Pterodactyl instance.</p>
+                    </div>
+                    <div class="col-sm-4">
+                        <h4 style="color: #ffd700;">2. The Root Identity Lock</h4>
+                        <p style="color: #9aaa8a;">To prevent unauthorized takeovers, your identity (email/username) is <strong>Immortal</strong>. It cannot be changed via UI even by an Admin. Only your <strong>Root API Token</strong> or <strong>Server Console</strong> can modify your identity.</p>
+                    </div>
+                    <div class="col-sm-4">
+                        <h4 style="color: #ffd700;">3. Root API Keys</h4>
+                        <p style="color: #9aaa8a;">Use root-level tokens only for audited automation paths. Keep token scope minimal, rotate keys frequently, and avoid embedding them in public CI logs.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer" style="background: rgba(255, 215, 0, 0.05); border-top: 1px solid #2a2000;">
+                <p class="text-center no-margin" style="color: #6a5a30;">
+                    <i class="fa fa-shield"></i> <strong>System Security Active</strong> &mdash; Identity fields are write-locked for security.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+@endsection

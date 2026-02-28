@@ -1,0 +1,33 @@
+<?php
+
+return [
+    'permissions' => [
+        'websocket_*' => 'Bolehin akses websocket?',
+        'control_console' => 'Bolehin Kontrol Srv?',
+        'control_start' => 'Bolehin Start srv?',
+        'control_stop' => 'Bolehin Stop Srv?',
+        'control_restart' => 'Bolehin Restart Srv?',
+        'control_kill' => 'Bolehin Kill Srv?',
+        'user_create' => 'Bolehin Add Subuser?',
+        'user_read' => 'Bolehin read usr?',
+        'user_update' => 'Bolehin Update Usr?',
+        'user_delete' => 'Bolehin Del SubUser?',
+        'file_create' => 'Boleh cfile?',
+        'file_read' => 'Boleh Read file?[all]',
+        'file_update' => 'Boleh Update file?',
+        'file_delete' => 'Bolehin del file/folder?',
+        'file_archive' => 'Bolehin archive file?',
+        'file_sftp' => 'kasih akses sftp?',
+        'allocation_read' => 'boleh baca aloc?',
+        'allocation_update' => 'Boleh modif aloc',
+        'database_create' => 'Boleh c db?',
+        'database_read' => 'boleh read db?',
+        'database_update' => 'Boleh update db?',
+        'database_delete' => 'boleh del db?',
+        'database_view_password' => 'Boleh liat pw db?',
+        'schedule_create' => 'Boleh add jadwal?',
+        'schedule_read' => 'Boleh Baca Jadwal?',
+        'schedule_update' => 'Boleh update jadwal?',
+        'schedule_delete' => 'Boleh del Jadwal?',
+    ],
+];

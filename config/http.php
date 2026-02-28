@@ -1,0 +1,27 @@
+<?php
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | API Rate Limits
+    |--------------------------------------------------------------------------
+    |
+    | Defines the rate limit for the number of requests per minute that can be
+    | executed against both the client and internal (application) APIs over the
+    | defined period (by default, 1 minute).
+    |
+    */
+    'rate_limit' => [
+        'client_period' => 1,
+        'client' => env('APP_API_CLIENT_RATELIMIT', 256),
+
+        'application_period' => 1,
+        'application' => env('APP_API_APPLICATION_RATELIMIT', 256),
+
+        'rootapplication_period' => 1,
+        'rootapplication' => env('APP_API_ROOTAPPLICATION_RATELIMIT', 120),
+
+        'remote_period' => 1,
+        'remote' => env('APP_API_REMOTE_RATELIMIT', 600),
+    ],
+];
