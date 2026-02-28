@@ -206,4 +206,4 @@
 </script>
     </body>
 </html>
-<?php /**PATH /var/hextyl/resources/views/templates/wrapper.blade.php ENDPATH**/ ?>
+<?php /**PATH /var/gantengdann/resources/views/templates/wrapper.blade.php ENDPATH**/ ?>

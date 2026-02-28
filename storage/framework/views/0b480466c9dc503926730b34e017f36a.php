@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title><?php echo e(config('app.name', 'Pterodactyl')); ?> - <?php echo $__env->yieldContent('title'); ?></title>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <meta name="_token" content="<?php echo e(csrf_token()); ?>">
+
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+        <link rel="manifest" href="/favicons/manifest.json">
+        <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#bc6e3c">
+        <link rel="shortcut icon" href="/favicons/favicon.ico">
+        <meta name="msapplication-config" content="/favicons/browserconfig.xml">
+        <meta name="theme-color" content="#06b0d1">
+
+        <?php echo $__env->make('layouts.scripts', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
+        <?php $__env->startSection('scripts'); ?>
+            <?php echo Theme::css('vendor/select2/select2.min.css?t={cache-version}'); ?>
+
+            <?php echo Theme::css('vendor/bootstrap/bootstrap.min.css?t={cache-version}'); ?>
+
+            <?php echo Theme::css('vendor/adminlte/admin.min.css?t={cache-version}'); ?>
+
+            <?php echo Theme::css('vendor/adminlte/colors/skin-blue.min.css?t={cache-version}'); ?>
+
+            <?php echo Theme::css('vendor/sweetalert/sweetalert.min.css?t={cache-version}'); ?>
+
+            <?php echo Theme::css('vendor/animate/animate.min.css?t={cache-version}'); ?>
+
+            <?php echo Theme::css('css/pterodactyl.css?t={cache-version}'); ?>
+
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+
+            <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+            <![endif]-->
+            <style>
+                /* =============================================
+                   Midnight Deep Dark — Admin Panel Overhaul
+                   ============================================= */
+                :root {
+                    --admin-accent: #58a6ff;
+                    --admin-accent-soft: rgba(88, 166, 255, 0.2);
+                    --admin-border: #30363d;
+                    --admin-surface: #161b22;
+                    --admin-surface-soft: #1a2029;
+                    --admin-text-muted: #8b949e;
+                }
+
+                /* ── Base Styles ── */
+                body, .wrapper, .content-wrapper, .main-footer {
+                    background-color: #0d1117 !important;
+                    color: #c9d1d9 !important;
+                }
+                .skip-link {
+                    position: fixed;
+                    top: 10px;
+                    left: 10px;
+                    z-index: 4000;
+                    padding: 8px 12px;
+                    border-radius: 8px;
+                    background: #1f6feb;
+                    color: #fff;
+                    font-weight: 700;
+                    text-decoration: none;
+                    transform: translateY(-140%);
+                    transition: transform 120ms ease;
+                }
+                .skip-link:focus {
+                    transform: translateY(0);
+                }
+                body.panel-polish::before {
+                    content: '';
+                    position: fixed;
+                    inset: 0;
+                    pointer-events: none;
+                    z-index: -1;
+                    background:
+                        radial-gradient(1100px 460px at -10% -10%, rgba(28, 111, 181, 0.16), transparent 60%),
+                        radial-gradient(900px 420px at 105% -5%, rgba(32, 73, 128, 0.16), transparent 62%);
+                }
+                body.panel-polish .wrapper {
+                    position: relative;
+                    z-index: auto;
+                }
+                .modal {
+                    z-index: 1060 !important;
+                }
+                .modal-backdrop {
+                    z-index: 1050 !important;
+                }
+                .modal .modal-content,
+                .modal .modal-body {
+                    overflow: visible !important;
+                }
+                .modal .modal-dialog {
+                    max-width: calc(100vw - 24px);
+                }
+                .modal .select2-container {
+                    width: 100% !important;
+                }
+                .modal-open .select2-container--open {
+                    z-index: 2070 !important;
+                }
+
+                /* ── Header & Logo ── */
+                .skin-blue .main-header .navbar,
+                .skin-blue .main-header .navbar .nav>li>a {
+                    background-color: #161b22 !important;
+                    border-bottom: 1px solid #30363d !important;
+                }
+                .skin-blue .main-header .logo {
+                    background-color: #010409 !important;
+                    border-bottom: 1px solid #30363d !important;
+                    border-right: 1px solid #30363d !important;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .skin-blue .main-header .logo:hover { background-color: #161b22 !important; }
+                .skin-blue .main-header .navbar .sidebar-toggle:hover { background-color: #21262d !important; }
+                .skin-blue .main-header .navbar .nav>li>a:hover { background: #21262d !important; }
+                .skin-blue .main-header { box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+                .skin-blue .main-header .navbar .nav>li>a {
+                    transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+                }
+                .skin-blue .main-header .navbar .nav>li>a:hover {
+                    box-shadow: inset 0 -2px 0 var(--admin-accent);
+                }
+
+                /* ── Sidebar ── */
+                .skin-blue .main-sidebar {
+                    background-color: #010409 !important;
+                    border-right: 1px solid #30363d !important;
+                }
+                .skin-blue .sidebar-menu>li.header {
+                    color: #8b949e !important;
+                    background: #0d1117 !important;
+                    font-size: 10px;
+                    letter-spacing: 1.5px;
+                    padding: 15px 15px 10px;
+                }
+                .skin-blue .sidebar-menu>li>a {
+                    border-left: 3px solid transparent !important;
+                    color: #8b949e !important;
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                    transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+                }
+                .skin-blue .sidebar-menu>li>a:hover,
+                .skin-blue .sidebar-menu>li.active>a {
+                    border-left-color: #58a6ff !important;
+                    background: #161b22 !important;
+                    color: #ffffff !important;
+                }
+                .skin-blue .sidebar-menu>li.active>a { color: #58a6ff !important; }
+                .skin-blue .sidebar-menu>li>a>.fa { color: #484f58; }
+                .skin-blue .sidebar-menu>li.active>a>.fa,
+                .skin-blue .sidebar-menu>li>a:hover>.fa { color: #58a6ff !important; }
+
+                /* ── Content Area ── */
+                .content-header h1 { color: #f0f6fc !important; }
+                .content-header h1 small { color: #8b949e !important; }
+                .content-header {
+                    margin-bottom: 10px;
+                    border: 1px solid rgba(80, 104, 132, 0.2);
+                    border-radius: 10px;
+                    background: linear-gradient(180deg, rgba(19, 28, 39, 0.86) 0%, rgba(16, 24, 35, 0.9) 100%);
+                    padding: 14px 16px 10px !important;
+                }
+                .breadcrumb { background: transparent !important; }
+                .breadcrumb>li+li::before { color: #484f58 !important; }
+                .breadcrumb a { color: #58a6ff !important; }
+
+                /* ── Boxes ── */
+                .box {
+                    background: #161b22 !important;
+                    border: 1px solid #30363d !important;
+                    border-top: 3px solid #30363d !important;
+                    border-radius: 8px;
+                    box-shadow: 0 8px 24px rgba(0,0,0,0.22) !important;
+                    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+                }
+                .box:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 14px 30px rgba(0,0,0,0.32) !important;
+                    border-color: #3a4655 !important;
+                }
+                .box.box-primary { border-top-color: #58a6ff !important; }
+                .box.box-success { border-top-color: #238636 !important; }
+                .box.box-warning { border-top-color: #d29922 !important; }
+                .box.box-danger  { border-top-color: #f85149 !important; }
+                .box-header.with-border { border-bottom: 1px solid #30363d !important; }
+                .box-title { color: #f0f6fc !important; font-weight: 600; }
+                .box-header { color: #f0f6fc !important; }
+
+                /* ── Tables ── */
+                .table { color: #c9d1d9 !important; }
+                .table>thead>tr>th {
+                    background: #21262d !important;
+                    color: #f0f6fc !important;
+                    border-bottom: 2px solid #30363d !important;
+                    font-size: 11px;
+                    text-transform: uppercase;
+                    letter-spacing: .5px;
+                }
+                .table-hover tbody tr:hover { background-color: #161b22 !important; }
+                .table>tbody>tr>td { border-top: 1px solid #30363d !important; vertical-align: middle; }
+                .table-bordered, .table-bordered>thead>tr>th, .table-bordered>tbody>tr>td { border: 1px solid #30363d !important; }
+                .table-hover tbody tr {
+                    transition: background-color 150ms ease, transform 150ms ease;
+                }
+                .table-hover tbody tr:hover {
+                    transform: translateX(1px);
+                }
+
+                /* ── Buttons ── */
+                .btn {
+                    border-radius: 7px !important;
+                    transition: transform 150ms ease, box-shadow 180ms ease, background-color 150ms ease, border-color 150ms ease;
+                }
+                .btn:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.22);
+                }
+                .btn[disabled],
+                .btn.disabled {
+                    opacity: .6;
+                    cursor: not-allowed;
+                    transform: none !important;
+                    box-shadow: none !important;
+                }
+                .btn:focus,
+                .btn:focus-visible {
+                    box-shadow: 0 0 0 3px var(--admin-accent-soft) !important;
+                }
+                .btn-primary { background-color: #238636 !important; border-color: rgba(240,246,252,0.1) !important; color: #fff !important; }
+                .btn-primary:hover { background-color: #2ea043 !important; }
+                .btn-success { background-color: #238636 !important; border-color: rgba(240,246,252,0.1) !important; }
+                .btn-warning { background-color: #d29922 !important; border-color: rgba(240,246,252,0.1) !important; color: #000 !important; }
+                .btn-danger  { background-color: #da3633 !important; border-color: rgba(240,246,252,0.1) !important; }
+                .btn-info    { background-color: #1f6feb !important; border-color: rgba(240,246,252,0.1) !important; }
+                .btn-default { background-color: #21262d !important; color: #c9d1d9 !important; border-color: #30363d !important; }
+                .btn-default:hover { background-color: #30363d !important; color: #f0f6fc !important; }
+
+                /* ── Form Inputs ── */
+                .form-control, input, select, textarea {
+                    background-color: #0d1117 !important;
+                    border: 1px solid #30363d !important;
+                    color: #c9d1d9 !important;
+                    border-radius: 6px !important;
+                    transition: border-color 150ms ease, box-shadow 180ms ease, background-color 150ms ease;
+                }
+                .form-control:focus {
+                    border-color: #58a6ff !important;
+                    box-shadow: 0 0 0 3px rgba(88,166,255,0.15) !important;
+                }
+                select.form-control option {
+                    background: #0d1117 !important;
+                    color: #c9d1d9 !important;
+                }
+                .control-label { color: #f0f6fc !important; font-weight: 600; }
+                .input-group-addon { background-color: #21262d !important; border-color: #30363d !important; color: #8b949e !important; }
+
+                /* ── Selects (Select2) ── */
+                .select2-container--default .select2-selection--single { background-color: #0d1117 !important; border-color: #30363d !important; }
+                .select2-container--default .select2-selection--single .select2-selection__rendered { color: #c9d1d9 !important; }
+                .select2-dropdown { background-color: #0d1117 !important; border: 1px solid #30363d !important; }
+                .select2-results__option { color: #8b949e !important; }
+                .select2-container--default .select2-results__option--highlighted { background-color: #1f6feb !important; color: #fff !important; }
+                .select2-container--default .select2-selection--multiple {
+                    background-color: #0d1117 !important;
+                    border-color: #30363d !important;
+                    min-height: 40px;
+                }
+                .select2-container--default .select2-selection--multiple .select2-selection__choice {
+                    background: #334155 !important;
+                    border: 1px solid #475569 !important;
+                    color: #e2e8f0 !important;
+                    border-radius: 4px !important;
+                    margin-top: 6px !important;
+                }
+                .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+                    color: #f8fafc !important;
+                    margin-right: 6px !important;
+                    border-right: 1px solid rgba(226, 232, 240, 0.25) !important;
+                    padding-right: 4px !important;
+                }
+                .select2-container--default .select2-selection--multiple .select2-search__field {
+                    color: #cbd5e1 !important;
+                    margin-top: 7px !important;
+                    background: transparent !important;
+                    min-width: 84px !important;
+                }
+
+                /* ── Alerts ── */
+                .alert { border-radius: 6px !important; border-left-width: 5px !important; }
+                .alert strong {
+                    letter-spacing: .2px;
+                }
+                .alert-info { background-color: #161b22 !important; border-color: #1f6feb !important; color: #58a6ff !important; }
+                .alert-success { background-color: #161b22 !important; border-color: #238636 !important; color: #3fb950 !important; }
+                .alert-danger { background-color: #161b22 !important; border-color: #f85149 !important; color: #f85149 !important; }
+                .alert-warning { background-color: #161b22 !important; border-color: #d29922 !important; color: #e3b341 !important; }
+
+                /* ── Pagination ── */
+                .pagination>li>a, .pagination>li>span { background-color: #161b22 !important; border-color: #30363d !important; color: #58a6ff !important; }
+                .pagination>.active>a, .pagination>.active>span { background-color: #1f6feb !important; border-color: #1f6feb !important; color: #fff !important; }
+                .pagination>li>a:hover { background-color: #21262d !important; }
+
+                /* ── Nav Tabs ── */
+                .nav-tabs-custom { background: #161b22 !important; border: 1px solid #30363d !important; border-radius: 6px; }
+                .nav-tabs-custom>.nav-tabs>li>a { color: #8b949e !important; }
+                .nav-tabs-custom>.nav-tabs>li.active { border-top-color: #58a6ff !important; }
+                .nav-tabs-custom>.nav-tabs>li.active>a { background: #161b22 !important; color: #fff !important; }
+                .nav-tabs-custom>.tab-content { background: transparent !important; color: #c9d1d9 !important; }
+
+                /* ── Footer ── */
+                .main-footer { border-top: 1px solid #30363d !important; color: #8b949e !important; background: #010409 !important; }
+                .user-image {
+                    object-fit: cover;
+                }
+
+                /* ── Scrollbars ── */
+                ::-webkit-scrollbar { width: 8px; height: 8px; }
+                ::-webkit-scrollbar-track { background: #0d1117; }
+                ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+                ::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+                /* ── Scope-Locked & UI Elements ── */
+                .locked-nav-item > a { opacity: 0.3 !important; filter: grayscale(1) !important; }
+                .progress, .progress .progress-bar { border-radius: 10px !important; }
+                .small-box { border-radius: 8px !important; }
+
+                .main-sidebar, .sidebar { height: 100vh; overflow-y: auto; }
+                .content-wrapper .content { max-width: 1440px; margin: 0 auto; }
+                .content-wrapper .content > .row:first-child {
+                    margin-bottom: 4px;
+                }
+                .content-header { padding-bottom: 6px; }
+                .content-wrapper {
+                    animation: panelFadeIn 220ms ease;
+                }
+                .table-responsive {
+                    border: 1px solid rgba(80, 104, 132, 0.2) !important;
+                    border-radius: 10px;
+                    background: rgba(11, 17, 26, 0.6);
+                }
+                .label {
+                    border-radius: 999px !important;
+                    padding: 4px 8px !important;
+                    font-weight: 700;
+                    letter-spacing: .2px;
+                }
+                @keyframes panelFadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(6px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                a:focus-visible,
+                button:focus-visible,
+                input:focus-visible,
+                select:focus-visible,
+                textarea:focus-visible {
+                    outline: 2px solid rgba(88, 166, 255, 0.8);
+                    outline-offset: 1px;
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    * {
+                        animation: none !important;
+                        transition: none !important;
+                    }
+                }
+
+                @media (max-width: 991px) {
+                    .content-header { padding: 12px 12px 0 !important; }
+                    .content { padding: 12px !important; }
+                    .content-wrapper .content { max-width: 100%; }
+                    .box-header .box-title {
+                        display: block;
+                        margin-bottom: 8px;
+                    }
+                    .box-header .box-tools {
+                        position: static !important;
+                        float: none !important;
+                        margin-top: 4px;
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                    }
+                    .main-header .logo {
+                        width: 56px !important;
+                        min-width: 56px !important;
+                        overflow: hidden;
+                    }
+                    .main-header .navbar { margin-left: 56px !important; }
+                    .navbar-custom-menu > .navbar-nav > li > a { padding: 15px 10px !important; }
+                    .navbar-custom-menu .user-menu .hidden-xs { display: none !important; }
+                    .main-footer .pull-right { float: none !important; margin: 0 0 8px 0 !important; }
+                    .table-responsive { border: 0 !important; }
+                }
+            </style>
+        <?php echo $__env->yieldSection(); ?>
+    </head>
+    <body class="hold-transition skin-blue fixed sidebar-mini panel-polish">
+        <a href="#mainContent" class="skip-link">Skip To Content</a>
+        <div class="wrapper ux-shell">
+            <header class="main-header">
+                <a href="<?php echo e(route('index')); ?>" class="logo">
+                    <span><img src="/favicons/logo.png" alt="<?php echo e(config('app.name', 'Pterodactyl')); ?>" style="height: 34px; width: auto;"></span>
+                </a>
+                <nav class="navbar navbar-static-top">
+                    <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <li class="user-menu">
+                                <a href="<?php echo e(route('account')); ?>">
+                                    <img src="<?php echo e(Auth::user()->avatar_url); ?>" class="user-image" alt="User Image">
+                                    <span class="hidden-xs"><?php echo e(Auth::user()->name_first); ?> <?php echo e(Auth::user()->name_last); ?></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<?php echo e(route('index')); ?>" data-toggle="tooltip" data-placement="bottom" title="Exit Admin Control"><i class="fa fa-server"></i></a>
+                            </li>
+                            <?php if(Auth::user()->isRoot()): ?>
+                            <li>
+                                <a href="<?php echo e(route('root.dashboard')); ?>" data-toggle="tooltip" data-placement="bottom" title="Root Panel &mdash; Full System Control"
+                                   style="position:relative;">
+                                    <i class="fa fa-star" style="color:#ffd700;"></i>
+                                    <span class="label label-danger" style="position:absolute;top:2px;right:2px;font-size:7px;padding:1px 3px;">R</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                            <li>
+                                <a href="<?php echo e(route('auth.logout')); ?>" id="logoutButton" data-toggle="tooltip" data-placement="bottom" title="Logout"><i class="fa fa-sign-out"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <aside class="main-sidebar">
+                <section class="sidebar">
+                    <ul class="sidebar-menu">
+                        <?php ($actor = Auth::user()); ?>
+                        <?php ($canReadNodes = $actor->isRoot() || $actor->hasScope('node.read')); ?>
+                        <?php ($canReadServers = $actor->isRoot() || $actor->hasScope('server.read')); ?>
+                        <?php ($canReadUsers = $actor->isRoot() || $actor->hasScope('user.read')); ?>
+                        <?php ($canReadDatabases = $actor->isRoot() || $actor->hasScope('database.read')); ?>
+                        <?php ($canReadInfra = $actor->isRoot() || $actor->hasScope('node.read')); ?>
+                        <li class="header">BASIC ADMINISTRATION</li>
+                        <li class="<?php echo e(Route::currentRouteName() !== 'admin.index' ?: 'active'); ?>">
+                            <a href="<?php echo e(route('admin.index')); ?>">
+                                <i class="fa fa-home"></i> <span>Overview</span>
+                            </a>
+                        </li>
+                        <li class="<?php echo e(starts_with(Route::currentRouteName(), 'admin.security.timeline') ? 'active' : ''); ?> <?php echo e($canReadUsers ? '' : 'locked-nav-item'); ?>">
+                            <a href="<?php echo e($canReadUsers ? route('admin.security.timeline') : '#'); ?>" <?php echo e($canReadUsers ? '' : 'tabindex="-1" aria-disabled="true"'); ?>>
+                                <i class="fa fa-history"></i> <span>Security Timeline</span>
+                            </a>
+                        </li>
+                        <li class="<?php echo e(! starts_with(Route::currentRouteName(), 'admin.settings') ?: 'active'); ?> <?php echo e($canReadInfra ? '' : 'locked-nav-item'); ?>">
+                            <a href="<?php echo e($canReadInfra ? route('admin.settings') : '#'); ?>" <?php echo e($canReadInfra ? '' : 'tabindex="-1" aria-disabled="true"'); ?>>
+                                <i class="fa fa-wrench"></i> <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="<?php echo e(! starts_with(Route::currentRouteName(), 'admin.api') ?: 'active'); ?>">
+                            <a href="<?php echo e(route('admin.api.index')); ?>">
+                                <i class="fa fa-gamepad"></i> <span>Application API</span>
+                            </a>
+                        </li>
+                        <?php if(Auth::user()->isRoot()): ?>
+                        <li class="<?php echo e(Route::currentRouteName() === 'admin.api.root' ? 'active' : ''); ?>">
+                            <a href="<?php echo e(route('admin.api.root')); ?>" style="color: #e05454 !important;">
+                                <i class="fa fa-key" style="color:#e05454 !important;"></i>
+                                <span>Root API Key <span class="label label-danger" style="font-size:9px; vertical-align:middle; margin-left:2px;">ROOT</span></span>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <li class="header">MANAGEMENT</li>
+                        <li class="<?php echo e(! starts_with(Route::currentRouteName(), 'admin.databases') ?: 'active'); ?> <?php echo e($canReadDatabases ? '' : 'locked-nav-item'); ?>">
+                            <a href="<?php echo e($canReadDatabases ? route('admin.databases') : '#'); ?>" <?php echo e($canReadDatabases ? '' : 'tabindex="-1" aria-disabled="true"'); ?>>
+                                <i class="fa fa-database"></i> <span>Databases</span>
+                            </a>
+                        </li>
+                        <li class="<?php echo e(! starts_with(Route::currentRouteName(), 'admin.locations') ?: 'active'); ?> <?php echo e($canReadInfra ? '' : 'locked-nav-item'); ?>">
+                            <a href="<?php echo e($canReadInfra ? route('admin.locations') : '#'); ?>" <?php echo e($canReadInfra ? '' : 'tabindex="-1" aria-disabled="true"'); ?>>
+                                <i class="fa fa-globe"></i> <span>Locations</span>
+                            </a>
+                        </li>
+                        <li class="<?php echo e(! starts_with(Route::currentRouteName(), 'admin.nodes') ?: 'active'); ?> <?php echo e($canReadNodes ? '' : 'locked-nav-item'); ?>">
+                            <a href="<?php echo e($canReadNodes ? route('admin.nodes') : '#'); ?>" <?php echo e($canReadNodes ? '' : 'tabindex="-1" aria-disabled="true"'); ?>>
+                                <i class="fa fa-sitemap"></i> <span>Nodes</span>
+                            </a>
+                        </li>
+                        <li class="<?php echo e(! starts_with(Route::currentRouteName(), 'admin.servers') ?: 'active'); ?> <?php echo e($canReadServers ? '' : 'locked-nav-item'); ?>">
+                            <a href="<?php echo e($canReadServers ? route('admin.servers') : '#'); ?>" <?php echo e($canReadServers ? '' : 'tabindex="-1" aria-disabled="true"'); ?>>
+                                <i class="fa fa-server"></i> <span>Servers</span>
+                            </a>
+                        </li>
+                        <li class="<?php echo e(! starts_with(Route::currentRouteName(), 'admin.users') ?: 'active'); ?> <?php echo e($canReadUsers ? '' : 'locked-nav-item'); ?>">
+                            <a href="<?php echo e($canReadUsers ? route('admin.users') : '#'); ?>" <?php echo e($canReadUsers ? '' : 'tabindex="-1" aria-disabled="true"'); ?>>
+                                <i class="fa fa-users"></i> <span>Users</span>
+                            </a>
+                        </li>
+                        <li class="<?php echo e(! starts_with(Route::currentRouteName(), 'admin.roles') ?: 'active'); ?> <?php echo e($canReadUsers ? '' : 'locked-nav-item'); ?>">
+                            <a href="<?php echo e($canReadUsers ? route('admin.roles') : '#'); ?>" <?php echo e($canReadUsers ? '' : 'tabindex="-1" aria-disabled="true"'); ?>>
+                                <i class="fa fa-shield"></i> <span>Roles</span>
+                            </a>
+                        </li>
+                        <li class="header">SERVICE MANAGEMENT</li>
+                        <li class="<?php echo e(! starts_with(Route::currentRouteName(), 'admin.mounts') ?: 'active'); ?> <?php echo e($canReadServers ? '' : 'locked-nav-item'); ?>">
+                            <a href="<?php echo e($canReadServers ? route('admin.mounts') : '#'); ?>" <?php echo e($canReadServers ? '' : 'tabindex="-1" aria-disabled="true"'); ?>>
+                                <i class="fa fa-magic"></i> <span>Mounts</span>
+                            </a>
+                        </li>
+                        <li class="<?php echo e(! starts_with(Route::currentRouteName(), 'admin.nests') ?: 'active'); ?> <?php echo e($canReadServers ? '' : 'locked-nav-item'); ?>">
+                            <a href="<?php echo e($canReadServers ? route('admin.nests') : '#'); ?>" <?php echo e($canReadServers ? '' : 'tabindex="-1" aria-disabled="true"'); ?>>
+                                <i class="fa fa-th-large"></i> <span>Nests</span>
+                            </a>
+                        </li>
+                    </ul>
+                </section>
+            </aside>
+            <div class="content-wrapper">
+                <section class="content-header">
+                    <?php echo $__env->yieldContent('content-header'); ?>
+                </section>
+                <section class="content" id="mainContent" tabindex="-1">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <?php if(count($errors) > 0): ?>
+                                <div class="alert alert-danger" style="border-left:4px solid #dd4b39;">
+                                    <strong><i class="fa fa-times-circle"></i> Validation Error</strong><br><br>
+                                    <ul style="margin-bottom:0;">
+                                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <li><?php echo e($error); ?></li>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
+                            <?php $__currentLoopData = Alert::getMessages(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $type => $messages): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php $__currentLoopData = $messages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $message): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <div class="alert alert-<?php echo e($type); ?> alert-dismissable" role="alert" style="border-left:4px solid <?php echo e($type === 'danger' ? '#dd4b39' : ($type === 'success' ? '#00a65a' : ($type === 'warning' ? '#f39c12' : '#06b0d1'))); ?>;">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <strong>
+                                            <?php if($type === 'danger'): ?> <i class="fa fa-ban"></i> Error
+                                            <?php elseif($type === 'success'): ?> <i class="fa fa-check-circle"></i> Success
+                                            <?php elseif($type === 'warning'): ?> <i class="fa fa-exclamation-triangle"></i> Warning
+                                            <?php else: ?> <i class="fa fa-info-circle"></i> Info <?php endif; ?>
+                                        </strong> &mdash;
+                                        <?php echo $message; ?>
+
+                                    </div>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </div>
+                    </div>
+                    <?php echo $__env->yieldContent('content'); ?>
+                </section>
+            </div>
+            <footer class="main-footer">
+                <div class="pull-right small text-gray" style="margin-right:10px;margin-top:-7px;">
+                    <strong><i class="fa fa-fw <?php echo e($appIsGit ? 'fa-git-square' : 'fa-code-fork'); ?>"></i></strong> <?php echo e($appVersion); ?><br />
+                    <strong><i class="fa fa-fw fa-clock-o"></i></strong> <?php echo e(round(microtime(true) - LARAVEL_START, 3)); ?>s
+                </div>
+                <span style="color:#8ab0be;">
+                    &copy; <?php echo e(date('Y')); ?>
+
+                    <a href="https://pterodactyl.io/" style="color:#06b0d1;">Pterodactyl</a> &amp;
+                    <strong style="color:#06b0d1;">GantengDann</strong> &mdash;
+                    <i class="fa fa-shield" style="color:#06b0d1;"></i> <span style="color:#06b0d1;">Protected by GantengDann</span>
+                </span>
+            </footer>
+        </div>
+        <?php $__env->startSection('footer-scripts'); ?>
+            <script src="/js/keyboard.polyfill.js" type="application/javascript"></script>
+            <script>keyboardeventKeyPolyfill.polyfill();</script>
+
+            <?php echo Theme::js('vendor/jquery/jquery.min.js?t={cache-version}'); ?>
+
+            <?php echo Theme::js('vendor/sweetalert/sweetalert.min.js?t={cache-version}'); ?>
+
+            <?php echo Theme::js('vendor/bootstrap/bootstrap.min.js?t={cache-version}'); ?>
+
+            <?php echo Theme::js('vendor/slimscroll/jquery.slimscroll.min.js?t={cache-version}'); ?>
+
+            <?php echo Theme::js('vendor/adminlte/app.min.js?t={cache-version}'); ?>
+
+            <?php echo Theme::js('vendor/bootstrap-notify/bootstrap-notify.min.js?t={cache-version}'); ?>
+
+            <?php echo Theme::js('vendor/select2/select2.full.min.js?t={cache-version}'); ?>
+
+            <?php echo Theme::js('js/admin/functions.js?t={cache-version}'); ?>
+
+            <script src="/js/autocomplete.js" type="application/javascript"></script>
+
+            <?php if(Auth::user()->root_admin): ?>
+                <script>
+                    $('#logoutButton').on('click', function (event) {
+                        event.preventDefault();
+
+                        var that = this;
+                        swal({
+                            title: 'Do you want to log out?',
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d9534f',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Log out'
+                        }, function () {
+                             $.ajax({
+                                type: 'POST',
+                                url: '<?php echo e(route('auth.logout')); ?>',
+                                data: {
+                                    _token: '<?php echo e(csrf_token()); ?>'
+                                },complete: function () {
+                                    window.location.href = '<?php echo e(route('auth.login')); ?>';
+                                }
+                        });
+                    });
+                });
+                </script>
+            <?php endif; ?>
+
+            <script>
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                })
+            </script>
+            <script>
+                (function () {
+                    $('form').on('submit', function () {
+                        const $form = $(this);
+                        if ($form.data('isSubmitting')) return false;
+                        $form.data('isSubmitting', true);
+
+                        const $submit = $form.find('button[type="submit"], input[type="submit"]').first();
+                        if ($submit.length) {
+                            $submit.data('original-text', $submit.is('button') ? $submit.html() : $submit.val());
+                            if ($submit.is('button')) {
+                                $submit.prop('disabled', true).addClass('disabled').html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+                            } else {
+                                $submit.prop('disabled', true).addClass('disabled').val('Processing...');
+                            }
+                        }
+                    });
+                })();
+            </script>
+        <?php echo $__env->yieldSection(); ?>
+    </body>
+</html>
+<?php /**PATH /var/gantengdann/resources/views/layouts/admin.blade.php ENDPATH**/ ?>

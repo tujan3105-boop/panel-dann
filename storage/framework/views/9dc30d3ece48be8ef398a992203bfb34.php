@@ -5,4 +5,4 @@
 
 <?php echo $__env->make('templates/wrapper', [
     'css' => ['body' => 'bg-neutral-800'],
-], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/hextyl/resources/views/templates/base/core.blade.php ENDPATH**/ ?>
+], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/gantengdann/resources/views/templates/base/core.blade.php ENDPATH**/ ?>
