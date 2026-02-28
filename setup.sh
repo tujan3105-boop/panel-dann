@@ -361,7 +361,7 @@ if ! [[ "${IDE_NODE_PORT}" =~ ^[0-9]+$ ]] || (( IDE_NODE_PORT < 1 || IDE_NODE_PO
     fail "--ide-node-port must be an integer between 1 and 65535."
 fi
 if is_reserved_ide_port "${IDE_NODE_PORT}"; then
-    warn "Port ${IDE_NODE_PORT} is reserved by GantengWings protocol flow (8080/2022). Selecting a safe IDE port..."
+    warn "Port ${IDE_NODE_PORT} is reserved by GDWings protocol flow (8080/2022). Selecting a safe IDE port..."
     IDE_NODE_PORT="$(pick_safe_ide_port 18080 18250)" || fail "Unable to auto-pick a safe IDE port."
     ok "Using IDE node port ${IDE_NODE_PORT}."
 fi
@@ -717,7 +717,7 @@ set_env WINGS_DDOS_WHITELIST "${WINGS_DDOS_WHITELIST}"
 set_env WINGS_BOOTSTRAP_INSTALL_MODE repo_source
 set_env WINGS_BOOTSTRAP_REPO_URL "https://github.com/hexzonetwork/gantengdann.git"
 set_env WINGS_BOOTSTRAP_REPO_REF main
-set_env WINGS_BOOTSTRAP_BINARY_URL_TEMPLATE "https://github.com/hexzonetwork/GantengWings/releases/latest/download/hexwings_linux_{arch}"
+set_env WINGS_BOOTSTRAP_BINARY_URL_TEMPLATE "https://github.com/hexzonetwork/GDWings/releases/latest/download/hexwings_linux_{arch}"
 set_env WINGS_BOOTSTRAP_BINARY_VERSION latest
 set_env WINGS_BOOTSTRAP_BINARY_SHA256_AMD64 ""
 set_env WINGS_BOOTSTRAP_BINARY_SHA256_ARM64 ""
@@ -944,16 +944,16 @@ if [[ "${INSTALL_WINGS}" == "y" ]]; then
     [[ -n "${WINGS_BOOTSTRAP_INSTALL_MODE}" ]] || WINGS_BOOTSTRAP_INSTALL_MODE="repo_source"
     [[ -n "${WINGS_BOOTSTRAP_REPO_URL}" ]] || WINGS_BOOTSTRAP_REPO_URL="https://github.com/hexzo/gantengdann.git"
     [[ -n "${WINGS_BOOTSTRAP_REPO_REF}" ]] || WINGS_BOOTSTRAP_REPO_REF="main"
-    [[ -n "${WINGS_BOOTSTRAP_BINARY_URL_TEMPLATE}" ]] || WINGS_BOOTSTRAP_BINARY_URL_TEMPLATE="https://github.com/hexzonetwork/GantengWings/releases/latest/download/hexwings_linux_{arch}"
+    [[ -n "${WINGS_BOOTSTRAP_BINARY_URL_TEMPLATE}" ]] || WINGS_BOOTSTRAP_BINARY_URL_TEMPLATE="https://github.com/hexzonetwork/GDWings/releases/latest/download/hexwings_linux_{arch}"
     [[ -n "${WINGS_BOOTSTRAP_BINARY_VERSION}" ]] || WINGS_BOOTSTRAP_BINARY_VERSION="latest"
 
     if [[ "${WINGS_BOOTSTRAP_INSTALL_MODE}" == "repo_source" ]]; then
-        log "Building GantengWings from source (${WINGS_BOOTSTRAP_REPO_URL}@${WINGS_BOOTSTRAP_REPO_REF})..."
+        log "Building GDWings from source (${WINGS_BOOTSTRAP_REPO_URL}@${WINGS_BOOTSTRAP_REPO_REF})..."
         apt-get install -y -q build-essential
         install_go_toolchain "1.24.1"
 
-        if [[ -d "${APP_DIR}/GantengWings" ]]; then
-            BUILD_SRC="${APP_DIR}/GantengWings"
+        if [[ -d "${APP_DIR}/GDWings" ]]; then
+            BUILD_SRC="${APP_DIR}/GDWings"
         else
             BUILD_ROOT="/opt/gantengdann-src"
             rm -rf "${BUILD_ROOT}"
@@ -962,10 +962,10 @@ if [[ "${INSTALL_WINGS}" == "y" ]]; then
                 git -C "${BUILD_ROOT}" fetch --depth 1 origin "${WINGS_BOOTSTRAP_REPO_REF}"
                 git -C "${BUILD_ROOT}" checkout -q FETCH_HEAD
             fi
-            BUILD_SRC="${BUILD_ROOT}/GantengWings"
+            BUILD_SRC="${BUILD_ROOT}/GDWings"
         fi
 
-        [[ -d "${BUILD_SRC}" ]] || fail "GantengWings source folder not found: ${BUILD_SRC}"
+        [[ -d "${BUILD_SRC}" ]] || fail "GDWings source folder not found: ${BUILD_SRC}"
         (
             cd "${BUILD_SRC}"
             go mod tidy || fail "go mod tidy failed in ${BUILD_SRC}"
@@ -975,7 +975,7 @@ if [[ "${INSTALL_WINGS}" == "y" ]]; then
     else
         WINGS_URL="${WINGS_BOOTSTRAP_BINARY_URL_TEMPLATE//\{arch\}/${ARCH}}"
         WINGS_URL="${WINGS_URL//\{version\}/${WINGS_BOOTSTRAP_BINARY_VERSION}}"
-        log "Downloading GantengWings binary from ${WINGS_URL}"
+        log "Downloading GDWings binary from ${WINGS_URL}"
         curl -fL -o /usr/local/bin/wings "${WINGS_URL}"
         chmod u+x /usr/local/bin/wings
     fi
